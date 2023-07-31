@@ -1,8 +1,7 @@
 # sqlalchemy-challenge
 Module 10 Challenge - Advanced SQL
 
-# Project Title 
-Brief project description 2-3 sentences.
+Before going on long holiday vacation in Honolulu, Hawaii, to help with trip planning, a climate analysis about the area is performed. 
 
 ## Table of Contents
 
@@ -13,7 +12,11 @@ Brief project description 2-3 sentences.
 - [Contributing](#contributing)
 
 ## About
-Write about 1-2 paragraphs describing the purpose of your project.
+###Part 1: Analyse and Explore the Climate Data
+In this section, Python and SQLAlchemy are used to do a basic climate analysis and data exploration of the climate database. Specifically, SQLAlchemy ORM queries, Pandas, and Matplotlib.ct are used.
+
+###Part 2: Design a Climate App
+Design a Flask API based on the queries that were developed in Part 1. 
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
