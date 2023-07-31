@@ -12,10 +12,10 @@ Before going on long holiday vacation in Honolulu, Hawaii, to help with trip pla
 - [Contributing](#contributing)
 
 ## About
-###Part 1: Analyse and Explore the Climate Data
+Part 1: Analyse and Explore the Climate Data
 In this section, Python and SQLAlchemy are used to do a basic climate analysis and data exploration of the climate database. Specifically, SQLAlchemy ORM queries, Pandas, and Matplotlib.ct are used.
 
-###Part 2: Design a Climate App
+Part 2: Design a Climate App
 Design a Flask API based on the queries that were developed in Part 1. 
 
 ## Getting Started
