@@ -28,22 +28,25 @@ def homepage():
 
     """List all available API routes with descriptions."""
     return """
-        Welcome to the Climate App!<br><br>
-        Available Routes:<br>
+        <font color="blue" size="6"><b>Welcome to the Climate App!</b></font><br><br>
+        <font color="red" size="4"><b>Available Routes:</b></font><br>
         <b>/api/v1.0/precipitation</b><br>
-        - Returns the date and precipitation data for the last 12 months.<br><br>
+        <font color="green"><i>- Returns the date and precipitation data for the last 12 months.</i></font><br><br>
         
         <b>/api/v1.0/stations</b><br>
-        - Returns a list of weather stations in the dataset.<br><br>
+        <font color="green"><i>- Returns a list of weather stations in the dataset.</i></font><br><br>
         
         <b>/api/v1.0/tobs</b><br>
-        - Returns the temperature observations for the most active station for the last 12 months.<br><br>
+        <font color="green"><i>- Returns the temperature observations for the most active station for the last 
+        12 months.</i></font><br><br>
         
         <b>/api/v1.0/&lt;start&gt;</b><br>
-        - Returns the minimum, average, and maximum temperature for all dates greater than or equal to the specified start date (YYYY-MM-DD).<br><br>
+        <font color="green"><i>- Returns the minimum, average, and maximum temperature for all dates greater than 
+        or equal to the specified start date (YYYY-MM-DD).</i></font><br><br>
         
         <b>/api/v1.0/&lt;start&gt;/&lt;end&gt;</b><br>
-        - Returns the minimum, average, and maximum temperature for dates between the specified start date and end date (YYYY-MM-DD).<br><br>
+        <font color="green"><i>- Returns the minimum, average, and maximum temperature for dates between the 
+        specified start date and end date (YYYY-MM-DD).</i></font><br><br>
     """
 
 
@@ -71,17 +74,19 @@ def precipitation():
 
 @app.route('/api/v1.0/stations')
 def stations():
-
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
-    # Perform the query to retrieve the list of stations
-    # Return a JSON list of stations
-    results = session.query(Station.station).all()
-    stations_list = [station[0] for station in results]
-    return jsonify(stations_list)
+    # Perform the query to retrieve the list of stations with their IDs and names
+    results = session.query(Station.station, Station.name).all()
     
     session.close()
+
+    # Create a list of dictionaries containing station IDs and names
+    stations_list = [{"station_id": station[0], "name": station[1]} for station in results]
+
+    # Return the JSON representation of the list
+    return jsonify(stations_list)
 
 @app.route('/api/v1.0/tobs')
 def tobs():
@@ -107,40 +112,44 @@ def tobs():
     active_stations_list = sorted(active_stations_list, key=lambda x: x[1], reverse=True)
 
     most_active_station_id = active_stations[0][0]
-    temperature_data = session.query(Measurement.date, Measurement.tobs).filter(Measurement.station == most_active_station_id, Measurement.date >= one_year_ago_date).all()
+     # Get the station name for the most active station
+    most_active_station_name = session.query(Station.name).filter(Station.station == most_active_station_id).first()[0]
+    
+    temperature_data = session.query(Measurement.date, Measurement.tobs).\
+        filter(Measurement.station == most_active_station_id, Measurement.date >= one_year_ago_date).all()
         
     session.close()
 
     # Convert the list of Row objects to a list of dictionaries
     temperature_data_list = [{"date": row[0], "tobs": row[1]} for row in temperature_data]
     
-    return jsonify(temperature_data_list)
+    # Add the station name and ID to the response
+    response = {
+        "station_id": most_active_station_id,
+        "station_name": most_active_station_name,
+        "temperatures": temperature_data_list
+    }
+    
+    return jsonify(response)
 
 @app.route('/api/v1.0/<start>')
 def temperature_stats_start(start):
-
-    # Create our session (link) from Python to the DB
     session = Session(engine)
-
-    # Convert start string to datetime object
     start_date = dt.datetime.strptime(start, '%Y-%m-%d')
-    
-    # Perform the query to calculate TMIN, TAVG, and TMAX for all dates greater than or equal to the start date
-    # Return a JSON list of the minimum temperature, average temperature, and maximum temperature
 
-    results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-                        filter(Measurement.date >= start_date).all()
-    
+    # Perform the query to calculate TMIN, TAVG, and TMAX for dates greater than or equal to the start date
+    # Return a JSON list of temperature statistics for each date
+    results = session.query(Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+                        filter(Measurement.date >= start_date - dt.timedelta(days=1)).\
+                        group_by(Measurement.date).all()
+
     session.close()
 
-    # Check if any of the results are None and handle accordingly
-    if None in results[0]:
-        # If any of the values are None, return a JSON response with a message
+    if not results:
         return jsonify({"message": "Temperature data not available for the given start date."})
     else:
-        # If all values are available, return the temperature statistics as JSON
-        temp_stats = {"TMIN": results[0][0], "TAVG": results[0][1], "TMAX": results[0][2]}
-        return jsonify(temp_stats)
+        temp_stats_list = [{"date": result[0], "TMIN": result[1], "TAVG": result[2], "TMAX": result[3]} for result in results]
+        return jsonify(temp_stats_list)
 
 @app.route('/api/v1.0/<start>/<end>')
 def temperature_stats_start_end(start, end):
@@ -153,21 +162,21 @@ def temperature_stats_start_end(start, end):
     end_date = dt.datetime.strptime(end, '%Y-%m-%d')
 
     # Perform the query to calculate TMIN, TAVG, and TMAX for dates from start date to end date (inclusive)
-    # Return a JSON list of the minimum temperature, average temperature, and maximum temperature
-
-    results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-                        filter(Measurement.date >= start_date, Measurement.date <= end_date).all()
+    # Return a JSON list of temperature statistics for each date
+    results = session.query(Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+                        filter(Measurement.date >= start_date - dt.timedelta(days=1), Measurement.date <= end_date).\
+                        group_by(Measurement.date).all()
     
     session.close()
 
-    # Check if any of the results are None and handle accordingly
-    if None in results[0]:
-        # If any of the values are None, return a JSON response with a message
+    # Check if any results are available and handle accordingly
+    if not results:
+        # If no results are available, return a JSON response with a message
         return jsonify({"message": "Temperature data not available for the given date range."})
     else:
-        # If all values are available, return the temperature statistics as JSON
-        temp_stats = {"TMIN": results[0][0], "TAVG": results[0][1], "TMAX": results[0][2]}
-        return jsonify(temp_stats)
-
+        # If results are available, create a list of temperature statistics for each date
+        temp_stats_list = [{"date": result[0], "TMIN": result[1], "TAVG": result[2], "TMAX": result[3]} for result in results]
+        return jsonify(temp_stats_list)
+    
 if __name__ == '__main__':
     app.run(debug=True)
