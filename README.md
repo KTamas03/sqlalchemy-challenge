@@ -9,9 +9,8 @@ Repository Folders and Contents:
     - hawaii.sqlite
     - hawaii_measurements.csv
     - hawaii_stations.csv
-  - scripts:
-    - app.py
-    - climate_kt.ipynb
+  - app.py
+  - climate_kt.ipynb
 
 ## Table of Contents
 
