@@ -98,9 +98,9 @@ To open app.py and activate the flask API:
  - Navigate to the folder location of the app.py file where it is saved on the local drive
  - In the Terminal type 'python app.py'
  - The url should be http://127.0.0.1:5000:
-    - open a webpage with the above url
-    - add the different routes to see the JSON output eg. http://127.0.0.1:5000/api/v1.0/precipitation
-    - to close the flask app in Visual Studio Code, press Ctrl + c
+      - open a webpage with the above url
+      - add the different routes to see the JSON output eg. http://127.0.0.1:5000/api/v1.0/precipitation
+      - to close the flask app in Visual Studio Code, press Ctrl + c
 
 ## Installing
 Flask needs to be installed in order to run Flask API.
