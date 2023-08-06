@@ -47,7 +47,7 @@ Jupyter Notebook Python Script:
     - sort the datafram by date
     - plot the results in a line chart, with date on the x-axis and precipitation on the y-axis
     - use Pandas to calculate the summary statistics for the precipitation data
-   - perform a station analysis:
+  - perform a station analysis:
     - calculate the total number of stations in the dataset
     - work out the most-active stations by listing the stations and observation counts in descending order
     - once identifying the most active station ie. most observations, filter to the previous 12 months of data
