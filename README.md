@@ -89,12 +89,12 @@ Visual Studio Code Python Script:
 ## Getting Started
 To open climate_kt.ipynb in Juypter Notebook:
   - Open Anaconda Prompt
-  - Activate dev environment type 'conda activate dev'
+  - Activate dev environment, type 'conda activate dev'
   - Navigate to the folder where repository is saved on local drive
-  - Open Jupyter Notebook type 'Jupyter Notebook'
+  - Open Jupyter Notebook, type 'Jupyter Notebook'
 
-To open and activate the flask API:
- - Open in app.py in Visual Studio Code
+To open app.py and activate the flask API:
+ - Open app.py in Visual Studio Code
  - Navigate to the folder location of the app.py file where it is saved on the local drive
  - In the Terminal type 'python app.py'
  - The url should be http://127.0.0.1:5000:
@@ -104,7 +104,7 @@ To open and activate the flask API:
 
 ## Installing
 Flask needs to be installed in order to run Flask API.
-To check if it is installed, in Anaconda Prompt type 'conda install -c anaconda flask'.
+To check if it is installed, in Anaconda Prompt, type 'conda install -c anaconda flask'.
 To check which version of flask has been installed, type 'flask --version'.
 
 
