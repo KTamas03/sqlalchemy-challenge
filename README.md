@@ -104,7 +104,9 @@ To open app.py and activate the flask API:
 
 ## Installing
 Flask needs to be installed in order to run Flask API.
+
 To check if it is installed, in Anaconda Prompt, type 'conda install -c anaconda flask'.
+
 To check which version of flask has been installed, type 'flask --version'.
 
 
