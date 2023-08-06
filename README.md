@@ -20,6 +20,7 @@ Repository Folders and Contents:
 
 ## About
 **Part 1: Analyse and Explore the Climate Data**
+
 Python and SQLAlchemy are used to do a basic climate analysis and data exploration of the climate database. Specifically, SQLAlchemy ORM queries, Pandas, and Matplotlib.ct are used.
 
 Tools/Libraries Imported:
@@ -54,6 +55,7 @@ Jupyter Notebook Python Script:
   
 
 **Part 2: Design a Climate App**
+
 A Flask API was designed based on the queries that were developed in Part 1. 
 
 Tools/Libraries Imported:
